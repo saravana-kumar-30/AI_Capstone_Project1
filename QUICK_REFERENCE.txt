@@ -1,0 +1,149 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                          ║
+║               🏦 LOAN APPROVAL AI SYSTEM - QUICK REFERENCE               ║
+║                                                                          ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 GET STARTED (First Time)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Method 1: Automated (Recommended)
+──────────────────────────────────
+$ cd /home/ubuntu/Desktop/Project1
+$ bash setup.sh
+$ source venv/bin/activate
+$ ./run_all_services.sh
+
+Method 2: Manual
+────────────────
+$ cd /home/ubuntu/Desktop/Project1
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
+$ ./run_all_services.sh
+
+Browser: http://localhost:8501
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📖 DOCUMENTATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+START HERE                          3 min    → START_HERE.md
+Quick Start Guide                   5 min    → QUICKSTART.md
+Installation Fix                    5 min    → INSTALL_FIX.md
+System Overview                    10 min    → SYSTEM_OVERVIEW.md
+Complete Documentation             30 min    → README.md
+Architecture Details               20 min    → ARCHITECTURE.md
+Deployment Guide                   15 min    → DEPLOYMENT_GUIDE.md
+Issue Resolution                    3 min    → ISSUE_RESOLVED.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔗 SERVICE ENDPOINTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Streamlit UI               http://localhost:8501
+FastAPI (Main)            http://localhost:8000
+FastAPI Docs (Swagger)    http://localhost:8000/docs
+ApplicantDB MCP           http://localhost:8001/health
+RiskRulesDB MCP           http://localhost:8002/health
+DecisionSynthesis MCP     http://localhost:8003/health
+NotificationSystem MCP    http://localhost:8004/health
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ QUICK COMMANDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Activate venv              source venv/bin/activate
+Start all services         ./run_all_services.sh
+Run tests                  python test_api.py
+Verify setup               python verify_setup.py
+Stop services              Ctrl+C
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 TEST APPLICANTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+APP001 - Strong Profile       → Should APPROVE ✅
+APP002 - Moderate Profile     → Should REVIEW 🟡
+APP003 - Risky Profile        → Should REJECT ❌
+
+Try in Streamlit UI at: http://localhost:8501
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔧 TROUBLESHOOTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+"externally managed environment"
+→ Use setup.sh or activate venv: source venv/bin/activate
+
+"Port already in use"
+→ Kill existing: lsof -i :8000 && kill -9 <PID>
+
+"Module not found"
+→ Activate venv and reinstall: source venv/bin/activate && pip install -r requirements.txt
+
+"ModuleNotFoundError: No module named 'distutils'"
+→ Python 3.12+ issue: pip install setuptools>=68.0
+
+"API not responding"
+→ Check all services running: curl http://localhost:8001/health
+
+See INSTALL_FIX.md or DISTUTILS_FIX.md for more help
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📁 PROJECT STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Application Code:
+  main.py                  → FastAPI server
+  orchestration.py         → Workflow coordinator
+  agents.py                → Agent implementations
+  schemas.py               → Data models
+
+MCP Servers (4 independent services):
+  mcp_applicant_db.py      → Port 8001
+  mcp_risk_rules.py        → Port 8002
+  mcp_decision_synthesis.py → Port 8003
+  mcp_notification.py      → Port 8004
+
+User Interface:
+  streamlit_app.py         → Web UI
+
+Utilities:
+  config.py                → Configuration
+  test_api.py              → Test suite
+  verify_setup.py          → Setup verification
+
+Setup & Deployment:
+  setup.sh                 → Automated setup
+  run_all_services.sh      → Start all services
+  requirements.txt         → Python dependencies
+  Dockerfile               → Docker image
+  docker-compose.yml       → Multi-container setup
+
+Documentation (9 files):
+  START_HERE.md
+  QUICKSTART.md
+  INSTALL_FIX.md
+  ISSUE_RESOLVED.md
+  SYSTEM_OVERVIEW.md
+  README.md
+  ARCHITECTURE.md
+  DEPLOYMENT_GUIDE.md
+  QUICK_REFERENCE.txt (this file)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 REMEMBER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Always activate venv first: source venv/bin/activate
+✅ You should see (venv) in your prompt
+✅ All services run on different ports (8000-8004, 8501)
+✅ Check documentation for issues
+✅ Virtual environment isolates the project
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎉 Ready to use! Follow the GET STARTED section above. 🎉
+

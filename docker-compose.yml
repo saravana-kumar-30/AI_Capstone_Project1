@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  applicant-db:
+    build: .
+    ports:
+      - "8001:8001"
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python mcp_applicant_db.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  risk-rules:
+    build: .
+    ports:
+      - "8002:8002"
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python mcp_risk_rules.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      - applicant-db
+
+  decision-synthesis:
+    build: .
+    ports:
+      - "8003:8003"
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python mcp_decision_synthesis.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      - risk-rules
+
+  notification:
+    build: .
+    ports:
+      - "8004:8004"
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python mcp_notification.py
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8004/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      - decision-synthesis
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    command: python main.py
+    depends_on:
+      applicant-db:
+        condition: service_healthy
+      risk-rules:
+        condition: service_healthy
+      decision-synthesis:
+        condition: service_healthy
+      notification:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  streamlit:
+    build: .
+    ports:
+      - "8501:8501"
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: streamlit run streamlit_app.py
+    depends_on:
+      api:
+        condition: service_healthy
+    volumes:
+      - .streamlit:/root/.streamlit
