@@ -10,8 +10,8 @@ class Config:
     MCP_HOST = os.getenv("MCP_HOST", "localhost")
     MCP_PORT = int(os.getenv("MCP_PORT", 8001))
     STREAMLIT_PORT = int(os.getenv("STREAMLIT_PORT", 8501))
+    MODEL_NAME = os.getenv("MODEL_NAME", "global.anthropic.claude-haiku-4-5-20251001-v1:0")
 
-    MODEL_NAME = "global.anthropic.claude-haiku-4-5-20251001-v1:0"
     TIMEOUT = 30
 
     DTI_THRESHOLD = 0.5
